@@ -1,7 +1,7 @@
 import os
 import re
 
-def getbypid(pid):
+def getProcess(pid):
     pid = str(pid)
     with open(os.path.join('/proc', pid, 'status'), 'rb') as status:
         # /proc/pid/status
@@ -36,4 +36,4 @@ def getbypid(pid):
 pids = [pid for pid in os.listdir('/proc') if pid.isdigit()]
 
 for pid in pids:
-    getbypid(pid)
+    getProcess(pid)
