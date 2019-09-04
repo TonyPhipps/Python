@@ -1,7 +1,11 @@
+import socket
+import datetime
 import os
 import re
 
 def getProcess(pid):
+    host = socket.getfqdn()
+    date_scanned = datetime.datetime.now().replace(microsecond=0).isoformat()
     pid = str(pid)
     with open(os.path.join('/proc', pid, 'status'), 'rb') as status:
         status = status.read().decode()
@@ -9,6 +13,8 @@ def getProcess(pid):
         cmdline = cmdline.read().decode()
 
         process = {
+            "host": host,
+            "date_scanned" : date_scanned,
             "pid" : int(pid),
             # /proc/pid/status
             # Reference: http://man7.org/linux/man-pages/man5/proc.5.html
