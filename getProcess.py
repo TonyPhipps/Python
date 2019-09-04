@@ -17,7 +17,7 @@ def getProcess(pid):
             "host": host,
             "date_scanned" : date_scanned,
             "pid" : int(pid),
-            
+
             # /proc/pid/status
             # Reference: http://man7.org/linux/man-pages/man5/proc.5.html
             "name" : re.search(r'Name:\s(.+)', status).groups()[0],
@@ -40,6 +40,7 @@ def getProcess(pid):
         print(key, ':', process[key])
     print('\n') 
 
+# Unit Test
 pids = [pid for pid in os.listdir('/proc') if pid.isdigit()]
 
 for pid in pids:
