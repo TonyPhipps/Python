@@ -5,9 +5,11 @@ def getProcess(pid):
     pid = str(pid)
     with open(os.path.join('/proc', pid, 'status'), 'rb') as status:
         status = status.read().decode()
-        # status = status.decode()
+        cmdline = open(os.path.join('/proc', pid, 'cmdline'), 'rb')
+        cmdline = cmdline.read().decode()
+
         process = {
-            pid : int(pid),
+            "pid" : int(pid),
             # /proc/pid/status
             # Reference: http://man7.org/linux/man-pages/man5/proc.5.html
             "name" : re.search(r'Name:\s(.+)', status).groups()[0],
@@ -22,7 +24,7 @@ def getProcess(pid):
             "threads" : re.search(r'Threads:\s(.+)', status).groups()[0],
 
             #/proc/pid/cmdline
-            "cmdline" : (open(os.path.join('/proc', pid, 'cmdline'), 'rb').read().split(b'\0')[0]).decode()
+            "cmdline" : cmdline.split('\0')[0]
         }
 
     # Print Dictionary
