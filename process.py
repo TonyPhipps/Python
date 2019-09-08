@@ -6,7 +6,6 @@ import socket
 import datetime
 import os
 import re
-import pprint
 
 class Process:
     '''
