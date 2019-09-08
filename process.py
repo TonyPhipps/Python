@@ -6,6 +6,7 @@ import socket
 import datetime
 import os
 import re
+import pprint
 
 class Process:
     '''
@@ -35,27 +36,4 @@ class Process:
         self.cmdline = self.cmdline.split('\0')[0]
 
     def __str__(self):
-        process = {
-            "host": self.host,
-            "date_scanned" : self.date_scanned,
-            "pid" : self.pid,
-
-            # /proc/pid/status
-            # Reference: http://man7.org/linux/man-pages/man5/proc.5.html
-            "name" : self.name,
-            "state" : self.state,
-            "ppid" : self.ppid,
-            "real_uid" : self.real_uid,
-            "effective_uid" : self.effective_uid,
-            "saved_uid" : self.saved_uid,
-            "real_gid" : self.real_gid,
-            "effective_gid" : self.effective_gid,
-            "saved_gid" : self.saved_gid,
-            "threads" : self.threads,
-
-            #/proc/pid/cmdline
-            "cmdline" : self.cmdline
-        }
-
-        # Print Dictionary
-        return process
+        return str(self.__dict__)
