@@ -32,7 +32,7 @@ class Process:
         self.threads = re.search(r'Threads:\s(.+)', self.status).group(1)
 
         #/proc/pid/cmdline
-        self.command = self.cmdline.split('\0')[0]
+        self.command = self.cmdline.replace('\0', ' ')
 
         del self.status
         del self.cmdline
