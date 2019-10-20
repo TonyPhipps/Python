@@ -4,5 +4,5 @@ from process import Process
 pids = [pid for pid in os.listdir('/proc') if pid.isdigit()]
 
 for pid in pids:
-    thisProcess = Process(pid)
-    print(thisProcess)
+    this_process = Process(pid)
+    print(this_process)
