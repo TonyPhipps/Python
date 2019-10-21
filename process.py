@@ -6,6 +6,8 @@ import socket
 import datetime
 import os
 import re
+import argparse
+import pprint
 
 class Process:
     '''
@@ -16,7 +18,8 @@ class Process:
         self.date_scanned = datetime.datetime.now().replace(microsecond=0).isoformat()
         self.pid = int(pid)
         self.status = (open(os.path.join('/proc', pid, 'status'), 'r')).read()
-        self.cmdline = (open(os.path.join('/proc', pid, 'cmdline'), 'r')).read()
+        self.cmdline_file = (open(os.path.join('/proc', pid, 'cmdline'), 'r')).read()
+        self.environ_file = (open(os.path.join('/proc', pid, 'environ'), 'r')).read()
 
         # /proc/pid/status
         # Reference: http://man7.org/linux/man-pages/man5/proc.5.html
@@ -32,10 +35,26 @@ class Process:
         self.threads = re.search(r'Threads:\s(.+)', self.status).group(1)
 
         #/proc/pid/cmdline
-        self.command = self.cmdline.replace('\0', ' ')
+        self.cmdline = self.cmdline_file.replace('\0', ' ')
+
+        #/proc/pid/environ
+        self.environ = self.environ_file.replace('\0', ' ')
 
         del self.status
-        del self.cmdline
+        del self.cmdline_file
+        del self.environ_file
 
     def __str__(self):
         return str(self.__dict__)
+
+def main():    
+    parser = argparse.ArgumentParser()
+    parser.add_argument('pid')
+    args = parser.parse_args()
+    this_process = Process(args.pid).__dict__
+
+    pp = pprint.PrettyPrinter(indent=4)
+    pp.pprint(this_process)
+
+if __name__ == '__main__':
+    main()
