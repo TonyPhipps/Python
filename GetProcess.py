@@ -8,6 +8,7 @@ import os
 import re
 import argparse
 import pprint
+import csv
 
 class Process:
     '''
@@ -47,14 +48,27 @@ class Process:
     def __str__(self):
         return str(self.__dict__)
 
-def main():    
+def main():   
     parser = argparse.ArgumentParser()
-    parser.add_argument('pid')
+    parser.add_argument('pid', nargs='?')
     args = parser.parse_args()
-    this_process = Process(args.pid).__dict__
 
-    pp = pprint.PrettyPrinter(indent=4)
-    pp.pprint(this_process)
+    if args.pid != None:
+        this_process = Process(args.pid).__dict__
+        pp = pprint.PrettyPrinter(indent=4)
+        pp.pprint(this_process)
+
+    else:
+        pids = [pid for pid in os.listdir('/proc') if pid.isdigit()]
+        processes = [Process(pid).__dict__ for pid in pids]
+        keys = processes[0].keys()
+        now = datetime.datetime.now()
+        date_scanned_filename = now.strftime('%Y%m%d-%H%M%S')
+
+        with open('processes_{}.csv'.format(date_scanned_filename), 'w') as output_csv:
+            dw = csv.DictWriter(output_csv, keys)
+            dw.writeheader()
+            dw.writerows(processes)
 
 if __name__ == '__main__':
     main()
