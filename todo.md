@@ -67,3 +67,44 @@
 
 # Check scheduled tasks:
     crontab -latqsystemctl list-timers  --all
+
+
+
+# Directories
+    ls -al
+    ls -alp
+    lsattr -a
+- /tmp
+- /var/tmp
+- /dev
+- /dev/shm
+- /bin
+- /sbin
+- /usr/bin
+- usr/sbin
+- /lib
+- /lib64
+- /lib32
+- /usr/lib
+- /usr/lib64
+- /usr/lib32
+- /etc
+- /var
+- /var/log
+- /var/spool/cron
+
+
+# Files
+- /var/log/wtmp - login attempts
+- /var/log/lastlog
+- /var/log/btmp - bad login attempts
+- /var/run/utmp
+
+# tools
+- utmpdump
+
+# Open Ports
+
+# Outbound Connections
+ 
+
