@@ -4,9 +4,10 @@ from swimlane import Swimlane
 swimlane_url = ''
 user=''
 password=''
+app_id=''
 
 swimlane = Swimlane(swimlane_url, user, password, verify_ssl=False)
-application = swimlane.apps.get(id='')
+application = swimlane.apps.get(id=app_id)
 
 report_data = application.reports.build('new_report', limit=0)
 report_data_json = []
