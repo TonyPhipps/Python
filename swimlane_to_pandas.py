@@ -5,7 +5,6 @@ from io import StringIO
 swimlane_url = ''
 user=''
 password=''
-app_id=''
 report_id=''
 
 swimlane = Swimlane(swimlane_url, user, password, verify_ssl=False)
