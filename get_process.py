@@ -51,7 +51,7 @@ class Process:
 def main():   
     parser = argparse.ArgumentParser()
     parser.add_argument('pid', nargs='?')
-    args = parser.parse_args()
+    args = parser.parse_args(args=[])
 
     if args.pid != None:
         this_process = Process(args.pid).__dict__
