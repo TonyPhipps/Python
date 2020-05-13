@@ -9,6 +9,7 @@ import re
 import argparse
 import pprint
 import csv
+import json
 
 class Process:
     '''
@@ -48,27 +49,57 @@ class Process:
     def __str__(self):
         return str(self.__dict__)
 
+    def toJSON(self):
+        return json.dumps(self.__dict__)
+
+    def toJSONfile(self,file):
+        with open(file, 'a') as text_file:
+            text_file.write(self.toJSON() + '\n')
+
+
+    def toCSVFile(self, file):
+            keys = self.__dict__.keys()
+            values = self.__dict__.values()
+            header = ', '.join(str(v) for v in keys)
+            row = ', '.join(str(v) for v in values)
+            csv = header + '\n' + row
+            
+            if os.path.isfile(file):
+                with open(file, 'a') as text_file:
+                    text_file.write('\n' + row)
+            else:
+                with open(file, 'w') as text_file:
+                    text_file.write(csv)
+
 def main():   
     parser = argparse.ArgumentParser()
-    parser.add_argument('pid', nargs='?')
-    args = parser.parse_args(args=[])
+    parser.add_argument('-p', '--pid', default=None, help='Specify a single PID to pull data from.')
+    parser.add_argument('-c', '--csv', default=None, help='Export to csv file.')
+    parser.add_argument('-j', '--json', default=None, help='Export to json file.')
+    args = parser.parse_args()
 
-    if args.pid != None:
+    now = datetime.datetime.now()
+    date_scanned_filename = now.strftime('%Y%m%d-%H%M%S')
+    pids = [pid for pid in os.listdir('/proc') if pid.isdigit()]
+    processes = [Process(pid) for pid in pids]
+
+    if args.csv is not None:
+        for process in processes:
+            process.toCSVFile(args.csv)
+
+    elif args.json is not None:
+        for process in processes:
+            process.toJSONfile(args.json)
+
+    elif args.pid is not None:
         this_process = Process(args.pid).__dict__
         pp = pprint.PrettyPrinter(indent=4)
         pp.pprint(this_process)
-
+    
     else:
-        pids = [pid for pid in os.listdir('/proc') if pid.isdigit()]
-        processes = [Process(pid).__dict__ for pid in pids]
-        keys = processes[0].keys()
-        now = datetime.datetime.now()
-        date_scanned_filename = now.strftime('%Y%m%d-%H%M%S')
-
-        with open('processes_{}.csv'.format(date_scanned_filename), 'w') as output_csv:
-            dw = csv.DictWriter(output_csv, keys)
-            dw.writeheader()
-            dw.writerows(processes)
+        for process in processes:
+            print(process.toJSON())
+        
 
 if __name__ == '__main__':
     main()
