@@ -2,14 +2,14 @@
 # Anthony Phipps
 # Copyright: GPLv3
 
-import socket
-import datetime
-import os
-import re
 import argparse
-import pprint
 import csv
+import datetime
 import json
+import os
+import pprint
+import re
+import socket
 
 class Process:
     '''
@@ -58,18 +58,18 @@ class Process:
 
 
     def toCSVFile(self, file):
-            keys = self.__dict__.keys()
-            values = self.__dict__.values()
-            header = ', '.join(str(v) for v in keys)
-            row = ', '.join(str(v) for v in values)
-            csv = header + '\n' + row
-            
-            if os.path.isfile(file):
-                with open(file, 'a') as text_file:
-                    text_file.write('\n' + row)
-            else:
-                with open(file, 'w') as text_file:
-                    text_file.write(csv)
+        keys = self.__dict__.keys()
+        values = self.__dict__.values()
+        header = ', '.join(str(v) for v in keys)
+        row = ', '.join(str(v) for v in values)
+        csv = header + '\n' + row
+        
+        if os.path.isfile(file):
+            with open(file, 'a') as text_file:
+                text_file.write('\n' + row)
+        else:
+            with open(file, 'w') as text_file:
+                text_file.write(csv)
 
 def main():   
     parser = argparse.ArgumentParser()
