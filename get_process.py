@@ -97,7 +97,6 @@ def main():
     else:
         for process in processes:
             print(process.toJSON())
-        
 
 if __name__ == '__main__':
     main()
