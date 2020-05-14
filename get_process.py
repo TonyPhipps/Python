@@ -78,8 +78,6 @@ def main():
     parser.add_argument('-j', '--json', default=None, help='Export to json file.')
     args = parser.parse_args()
 
-    now = datetime.datetime.now()
-    date_scanned_filename = now.strftime('%Y%m%d-%H%M%S')
     pids = [pid for pid in os.listdir('/proc') if pid.isdigit()]
     processes = [Process(pid) for pid in pids]
 
