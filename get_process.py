@@ -56,7 +56,6 @@ class Process:
         with open(file, 'a') as text_file:
             text_file.write(self.toJSON() + '\n')
 
-
     def toCSVFile(self, file):
         keys = self.__dict__.keys()
         values = self.__dict__.values()
