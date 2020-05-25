@@ -68,9 +68,11 @@ def main():
     # Pull Search results
     searchResults = httplib2.Http(disable_ssl_certificate_validation=True).request(baseurl + '/services/search/jobs/' + sid + '/events','GET',
         headers={'Authorization': 'Splunk {}'.format(sessionKey)},body=urllib.parse.urlencode({'output_mode': 'json'}))[1]
+    searchResults_json = json.loads(searchResults)
+    #print(searchResults_json['results'])
 
     # If search results contains events, dump to file
-    if searchResults != b'{"preview":true,"init_offset":0,"post_process_count":0,"messages":[],"results":[]}':
+    if searchResults_json['results'] != []:
         searchResults_json = json.loads(searchResults)
         with open('splunk_' + nowFileName + '.json', 'w') as outfile:
             for result in searchResults_json['results']:
