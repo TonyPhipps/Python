@@ -1,4 +1,4 @@
-# Filename: process.py
+# Filename: get_process.py
 # Anthony Phipps
 # Copyright: GPLv3
 
