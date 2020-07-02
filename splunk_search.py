@@ -10,6 +10,7 @@ import httplib2
 import json
 import time
 import urllib.request, urllib.parse, urllib.error
+import pandas as pd
 from xml.dom import minidom
 
 def main():
@@ -19,6 +20,7 @@ def main():
     parser.add_argument('username', help='Username')
     parser.add_argument('password', help='Password')
     parser.add_argument('search', help='Search string')
+    parser.add_argument('output', help='json or csv')
     args = parser.parse_args()
 
     now = datetime.datetime.now()
@@ -28,6 +30,7 @@ def main():
     userName = args.username
     password = args.password
     searchQuery = args.search
+    output = args.output
     
     # Set up search query
     searchQuery = searchQuery.strip()
@@ -76,10 +79,17 @@ def main():
     # If search results contains events, dump to file
     if searchResults_json['results'] != []:
         searchResults_json = json.loads(searchResults)
-        with open('splunk_' + nowFileName + '.json', 'w') as outfile:
-            for result in searchResults_json['results']:
-                json.dump(result, outfile)
-                outfile.write("\n")
+
+        if output == "json":
+            with open('splunk_' + nowFileName + '.json', 'w') as outfile:
+                for result in searchResults_json['results']:
+                    json.dump(result, outfile)
+                    outfile.write("\n")
+
+        if output == "csv":             
+            df = pd.DataFrame(searchResults_json['results'])
+            filename = 'splunk_' + nowFileName + '.csv'
+            df.to_csv (filename, index=None, header=True)
 
 if __name__ == '__main__':
     main()
