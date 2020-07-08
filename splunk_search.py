@@ -2,7 +2,7 @@
 # Anthony Phipps
 # Copyright: GPLv3
 # The sample below pulls the last 5 minutes of notable events - this could be ran every 5 minutes to establish near-realtime recording to a SIEM
-# python splunksearch.py "https://yourserver.splunkcloud.com:8089" "youruser" "yourpassword" "index=notable earliest=-5m@s"
+# python splunksearch.py "https://yourserver.splunkcloud.com:8089" "youruser" "yourpassword" "index=notable earliest=-5m@s" "json" --path "print"
 
 import argparse
 import datetime
@@ -20,7 +20,8 @@ def main():
     parser.add_argument('username', help='Username')
     parser.add_argument('password', help='Password')
     parser.add_argument('search', help='Search string')
-    parser.add_argument('output', help='json or csv')
+    parser.add_argument('output_format', help='json or csv')
+    parser.add_argument('-p', '--path', default=None, help='Export to specified path.')
     args = parser.parse_args()
 
     now = datetime.datetime.now()
@@ -30,7 +31,8 @@ def main():
     userName = args.username
     password = args.password
     searchQuery = args.search
-    output = args.output
+    output_format = args.output_format
+    path = args.path
     
     # Set up search query
     searchQuery = searchQuery.strip()
@@ -80,16 +82,28 @@ def main():
     if searchResults_json['results'] != []:
         searchResults_json = json.loads(searchResults)
 
-        if output == "json":
-            with open('splunk_' + nowFileName + '.json', 'w') as outfile:
+        if output_format == "json":
+            if args.path == "print":
                 for result in searchResults_json['results']:
-                    json.dump(result, outfile)
-                    outfile.write("\n")
+                    print("%s\n{}".format(json.dumps(result)))
+            else:
+                if args.path is None:
+                    path = 'splunk_' + nowFileName + '.json'
 
-        if output == "csv":             
+                with open(path, 'w') as outfile:
+                    for result in searchResults_json['results']:
+                        json.dump(result, outfile)
+                        outfile.write("\n")
+
+        if output_format == "csv":
             df = pd.DataFrame(searchResults_json['results'])
-            filename = 'splunk_' + nowFileName + '.csv'
-            df.to_csv (filename, index=None, header=True)
+
+            if args.path == "print":    
+                print(df.to_csv(index=None, header=True))
+            else:
+                if args.path is None:
+                    path = 'splunk_' + nowFileName + '.csv'
+                df.to_csv (path, index=None, header=True)
 
 if __name__ == '__main__':
     main()
