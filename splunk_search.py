@@ -36,31 +36,26 @@ def main():
     
     # Set up search query
     searchQuery = searchQuery.strip()
+    
     # If the query doesn't already start with the 'search' operator or another
     # generating command (e.g. "| inputcsv"), then prepend "search " to it.
     if not (searchQuery.startswith('search') or searchQuery.startswith("|")):
         searchQuery = 'search ' + searchQuery
-    #print(searchQuery)
 
     # Authenticate with server.
     # Disable SSL cert validation. Splunk certs are self-signed.
     serverContent = httplib2.Http(disable_ssl_certificate_validation=True).request(baseurl + '/services/auth/login',
         'POST', headers={}, body=urllib.parse.urlencode({'username':userName, 'password':password}))[1]
-    #print(serverContent)
     sessionKey = minidom.parseString(serverContent).getElementsByTagName('sessionKey')[0].childNodes[0].nodeValue
-    #print(sessionKey)
 
     # Run the search and get the search ID.
     # Disable SSL cert validation. Splunk certs are self-signed.
     searchResponse = httplib2.Http(disable_ssl_certificate_validation=True).request(baseurl + '/services/search/jobs','POST',
         headers={'Authorization': 'Splunk {}'.format(sessionKey)}, body=urllib.parse.urlencode({'search': searchQuery}))[1]
-    #print(searchResponse)
 
     sid = None
-    #sid = ''
     if not sid:
         sid = minidom.parseString(searchResponse).getElementsByTagName('sid')[0].childNodes[0].nodeValue
-    #print(sid)
 
     # While loop until Splunk search has completed
     isDone = False
@@ -78,18 +73,18 @@ def main():
     searchResults_json = json.loads(searchResults)
     #print(searchResults_json['results'])
 
-    # If search results contains events, dump to file
+    # OUTPUT
     if searchResults_json['results'] != []:
         searchResults_json = json.loads(searchResults)
 
         if output_format == "json":
+
             if args.path == "print":
                 for result in searchResults_json['results']:
-                    print("%s\n{}".format(json.dumps(result)))
+                    print("\n{}".format(json.dumps(result)))
             else:
                 if args.path is None:
                     path = 'splunk_' + nowFileName + '.json'
-
                 with open(path, 'w') as outfile:
                     for result in searchResults_json['results']:
                         json.dump(result, outfile)
