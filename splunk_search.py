@@ -68,7 +68,7 @@ def main():
         time.sleep(1)
         
     # Pull Search results
-    searchResults = httplib2.Http(disable_ssl_certificate_validation=True).request(baseurl + '/services/search/jobs/' + sid + '/events','GET',
+    searchResults = httplib2.Http(disable_ssl_certificate_validation=True).request(baseurl + '/services/search/jobs/' + sid + '/events/?output_mode=json&count=0','GET',
         headers={'Authorization': 'Splunk {}'.format(sessionKey)},body=urllib.parse.urlencode({'output_mode': 'json'}))[1]
     searchResults_json = json.loads(searchResults)
     #print(searchResults_json['results'])
