@@ -2,7 +2,7 @@
 # Anthony Phipps
 # Copyright: GPLv3
 # The sample below pulls the last 5 minutes of notable events - this could be ran every 5 minutes to establish near-realtime recording to a SIEM
-# python splunksearch.py "https://yourserver.splunkcloud.com:8089" "youruser" "yourpassword" "index=notable earliest=-5m@s" "json" --path "print"
+# python splunk_search.py "https://yourserver.splunkcloud.com:8089" "youruser" "yourpassword" "index=notable earliest=-5m@s" "json" --path "print"
 
 import argparse
 import datetime
