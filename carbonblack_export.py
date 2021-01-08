@@ -28,23 +28,20 @@ def get_watchlists(org_key):
         print('[!] HTTP {0} calling [{1}]'.format(response.status_code, api_url))
         return None
 
-result = get_watchlists(org_key)
-
-print(result)
-
-employ_data = open('watchlists.csv', 'w', newline="")
-
-csvwriter = csv.writer(employ_data)
-count = 0
-for emp in result:
-      if count == 0:
-             header = emp.keys()
-             csvwriter.writerow(header)
-             count += 1
-      csvwriter.writerow(emp.values())
-employ_data.close()
-
-
+def save_watchlists():
+    result = get_watchlists(org_key)
+    # print(result)
+    data = open('watchlists.csv', 'w', newline="")
+    
+    csvwriter = csv.writer(data)
+    count = 0
+    for emp in result:
+        if count == 0:
+                header = emp.keys()
+                csvwriter.writerow(header)
+                count += 1
+        csvwriter.writerow(emp.values())
+    data.close()
 
 
 def get_devices_export(org_key):
@@ -61,12 +58,17 @@ def get_devices_export(org_key):
         print('[!] HTTP {0} calling [{1}]'.format(response.status_code, api_url))
         return None
 
-result = get_devices_export(org_key)
+def save_devices_export():
 
-if result is not None:
-    #print(result)
+    result = get_devices_export(org_key)
 
-    with open('devices.csv', 'wb') as text_file:
-        text_file.write(result)
-else:
-    print('No results')
+    if result is not None:
+        #print(result)
+
+        with open('devices.csv', 'wb') as text_file:
+            text_file.write(result)
+    else:
+        print('No results')
+
+save_devices_export()
+save_watchlists()
