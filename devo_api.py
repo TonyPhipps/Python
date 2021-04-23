@@ -36,4 +36,17 @@ def get_roles():
         print('[!] HTTP {0} calling [{1}]'.format(response.status_code, api_url))
         return None
 
-get_roles()
+def get_role(role, full='false'):
+    api_url = '{}/roles/{}?full={}'.format(api_url_base, role, full)
+    response = requests.get(api_url, headers=headers)
+    
+    if response.status_code == 200:
+        json_data = json.loads(response.text)
+        print(json_data)
+
+    else:
+        print('[!] HTTP {0} calling [{1}]'.format(response.status_code, api_url))
+        return None
+
+
+get_role('Monitor', full='true')
