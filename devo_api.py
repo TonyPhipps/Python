@@ -29,8 +29,8 @@ def get_roles():
     
     if response.status_code == 200:
         json_data = json.loads(response.text)
-        results = json_data
-        print(results)
+        for obj in json_data:
+            print(obj)
 
     else:
         print('[!] HTTP {0} calling [{1}]'.format(response.status_code, api_url))
