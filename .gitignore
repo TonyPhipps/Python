@@ -107,3 +107,6 @@ venv.bak/
 settings.json
 *.json
 *.csv
+
+# test-files
+*test.*
