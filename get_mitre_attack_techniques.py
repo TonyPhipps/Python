@@ -1,4 +1,5 @@
-# https://attackcti.readthedocs.io/en/latest/attackcti_overview.html
+# https://attackcti.com/intro.html
+
 
 from attackcti import attack_client
 import pandas
