@@ -6,10 +6,11 @@ import hmac
 import hashlib
 import requests
 import json
+#import csv
 
-api_key = ''
-api_secret = ''
-domain = ''
+api_key = '###'
+api_secret = '###'
+domain = '###@###'
 
 provision_api_url_base = 'https://api-us.devo.com/probio/domain/{}'.format(domain)
 query_api_url_base = 'https://apiv2-us.devo.com/search'
@@ -17,16 +18,21 @@ timestamp = str(int(time.time()) * 1000)
 
 sign = hmac.new(api_secret.encode(), (api_key + timestamp).encode(), hashlib.sha256).hexdigest()
 
-headers = {
+provision_headers = {
     'x-logtrust-domain-apikey': api_key,
     'x-logtrust-sign': sign,
     'x-logtrust-timestamp': timestamp,
     'Content-Type': "application/json",
     }
 
+query_headers = {
+    'Authorization': "Bearer ###",
+    'Content-Type': "application/json",
+    }
+
 def get_roles():
     api_url = '{}/roles'.format(provision_api_url_base)
-    response = requests.get(api_url, headers=headers)
+    response = requests.get(api_url, headers=provision_headers)
     
     if response.status_code == 200:
         json_data = json.loads(response.text)
@@ -39,7 +45,7 @@ def get_roles():
 
 def get_role(role, full='false'):
     api_url = '{}/roles/{}?full={}'.format(provision_api_url_base, role, full)
-    response = requests.get(api_url, headers=headers)
+    response = requests.get(api_url, headers=provision_headers)
     
     if response.status_code == 200:
         json_data = json.loads(response.text)
@@ -61,14 +67,20 @@ def post_query():
         },
     }
 
-    response = requests.post(api_url, headers=headers, json=data)
+    response = requests.post(api_url, headers=query_headers, json=data)
     
     if response.status_code == 200:
-        json_data = json.loads(response.text)
-        print(json_data)
+        with open("results.csv", "w") as f:
+            try:
+                f.write(response.text)
+            except Exception as error:
+                print(error)
+
+        #print(response.text)
 
     else:
         print('[!] HTTP {0} calling [{1}]'.format(response.status_code, api_url))
+        print(response.text)
         return None
 
 
