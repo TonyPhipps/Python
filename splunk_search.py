@@ -46,6 +46,9 @@ def main():
     # Disable SSL cert validation. Splunk certs are self-signed.
     serverContent = httplib2.Http(disable_ssl_certificate_validation=True).request(baseurl + '/services/auth/login',
         'POST', headers={}, body=urllib.parse.urlencode({'username':userName, 'password':password}))[1]
+    print('')
+    print(serverContent)
+    print('')
     sessionKey = minidom.parseString(serverContent).getElementsByTagName('sessionKey')[0].childNodes[0].nodeValue
 
     # Run the search and get the search ID.
