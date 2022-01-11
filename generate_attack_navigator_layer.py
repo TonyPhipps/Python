@@ -33,7 +33,6 @@
 import argparse
 import csv
 import json
-import requests
 
 
 def generate(csv_file):
